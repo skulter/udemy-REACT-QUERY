@@ -12,8 +12,8 @@ export function Posts() {
   // replace with useQuery
   // const data = [];
   const { data, isError, isFetching, isLoading } = useQuery({
-    queryKey: ["posts"],
-    queryFn: fetchPosts,
+    queryKey: ["posts", currentPage],
+    queryFn: () => fetchPosts(currentPage),
   });
 
   if (isLoading) {
@@ -26,7 +26,7 @@ export function Posts() {
   return (
     <>
       <ul>
-        {data.map((post) => (
+        {data?.map((post) => (
           <li
             key={post.id}
             className="post-title"
@@ -37,11 +37,21 @@ export function Posts() {
         ))}
       </ul>
       <div className="pages">
-        <button disabled onClick={() => {}}>
+        <button
+          disabled={currentPage === 0}
+          onClick={() => {
+            setCurrentPage((prev) => prev - 1);
+          }}
+        >
           Previous page
         </button>
-        <span>Page {currentPage + 1}</span>
-        <button disabled onClick={() => {}}>
+        <span>Page {currentPage}</span>
+        <button
+          disabled={maxPostPage === currentPage}
+          onClick={() => {
+            setCurrentPage((prev) => prev + 1);
+          }}
+        >
           Next page
         </button>
       </div>
